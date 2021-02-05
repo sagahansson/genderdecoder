@@ -1,38 +1,38 @@
 import re
 import wordlists
 
-def assess(ad_text):
+def assess(ad_text, masc_w=wordlists.masculine_coded_words, fem_w=wordlists.feminine_coded_words):
     ad_text = ''.join([i if ord(i) < 128 else ' ' for i in ad_text])
     ad_text = re.sub("[\\s]", " ", ad_text, 0, 0)
     ad_text = re.sub("[\.\t\,\:;\(\)\.]", "", ad_text, 0, 0).split(" ")
     ad_text = [ad for ad in ad_text if ad != ""]
         
-    masculine_coded_words = [adword for adword in ad_text
-        for word in wordlists.masculine_coded_words
+    masc_w = [adword for adword in ad_text
+        for word in masc_w
         if adword.startswith(word)]
     
-    feminine_coded_words = [adword for adword in ad_text
-        for word in wordlists.feminine_coded_words
+    fem_w = [adword for adword in ad_text
+        for word in fem_w
         if adword.startswith(word)]
     
-    if feminine_coded_words and not masculine_coded_words:
+    if fem_w and not masc_w:
         result = "strongly feminine-coded"
-    elif masculine_coded_words and not feminine_coded_words:
+    elif masc_w and not fem_w:
         result = "strongly masculine-coded"
-    elif not masculine_coded_words and not feminine_coded_words:
+    elif not masc_w and not fem_w:
         result = "neutral"
     else: 
-        if len(feminine_coded_words) == len(masculine_coded_words):
+        if len(fem_w) == len(masc_w):
             result = "neutral"
-        if ((len(feminine_coded_words) / len(masculine_coded_words)) >= 2 and 
-            len(feminine_coded_words) > 5):
+        if ((len(fem_w) / len(masc_w)) >= 2 and 
+            len(fem_w) > 5):
             result = "strongly feminine-coded"
-        if ((len(masculine_coded_words) / len(feminine_coded_words)) >= 2 and 
-            len(masculine_coded_words) > 5):
+        if ((len(masc_w) / len(fem_w)) >= 2 and 
+            len(masc_w) > 5):
             result = "strongly masculine-coded"
-        if len(feminine_coded_words) > len(masculine_coded_words):
+        if len(fem_w) > len(masc_w):
             result = "feminine-coded"
-        if len(masculine_coded_words) > len(feminine_coded_words):
+        if len(masc_w) > len(fem_w):
             result = "masculine-coded"
     
     if "feminine" in result:
@@ -44,7 +44,7 @@ def assess(ad_text):
         explanation = ("This job ad uses more words that are stereotypically masculine "
             "than words that are stereotypically feminine. It risks putting women off "
             "applying, but will probably encourage men to apply.")
-    elif not masculine_coded_words and not feminine_coded_words:
+    elif not masc_w and not fem_w:
         explanation = ("This job ad doesn't use any words that are stereotypically "
             "masculine and stereotypically feminine. It probably won't be off-putting "
             "to men or women applicants.")
@@ -55,6 +55,6 @@ def assess(ad_text):
 
     return {"result": result,
             "explanation": explanation,
-            "masculine_coded_words": masculine_coded_words,
-            "feminine_coded_words": feminine_coded_words
+            "masculine_coded_words": masc_w,
+            "feminine_coded_words": fem_w
             }
