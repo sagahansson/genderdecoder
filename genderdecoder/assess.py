@@ -1,6 +1,7 @@
 import re
 import wordlists
 
+
 def assess(ad_text, masc_w=wordlists.masculine_coded_words, fem_w=wordlists.feminine_coded_words):
     ad_text = ''.join([i if ord(i) < 128 else ' ' for i in ad_text])
     ad_text = re.sub("[\\s]", " ", ad_text, 0, 0)
@@ -99,7 +100,7 @@ def assess_v2(ad_text, masc_w=wordlists.masculine_coded_words, fem_w=wordlists.f
             }
 
 # male_list and female_list that contain asterisk words should be passed as arguments.
-def assess_v3(ad_text, masc_w=male_list, fem_w=female_list):
+def assess_v3(ad_text, masc_w=wordlists.masculine_coded_words, fem_w=wordlists.feminine_coded_words):
     
     ad_text = ''.join([i if ord(i) < 128 else ' ' for i in ad_text])
     ad_text = re.sub("[\\s]", " ", ad_text, 0, 0)
