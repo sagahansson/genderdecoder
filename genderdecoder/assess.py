@@ -77,27 +77,57 @@ def assess_v2(ad_text, masc_w=wordlists.masculine_coded_words, fem_w=wordlists.f
     
     fem_w_count = len(fem_w)
     masc_w_count = len(masc_w)
-    coding_score = fem_w_count - masc_w_count
-    if coding_score == 0:
-        if fem_w_count:
-            result = "neutral"
-        else:
-            result = "empty"
-            
-    elif coding_score > 3:
-        result = "strongly feminine-coded"
-    elif coding_score > 0:
+    
+    if fem_w_count > masc_w_count:
         result = "feminine-coded"
-    elif coding_score < -3:
-        result = "strongly masculine-coded"
+    elif fem_w_count - masc_w_count == 0:
+        result = "neutral"
     else:
         result = "masculine-coded"
-  
 
     return {"result": result,
             "masculine_coded_words": masc_w,
             "feminine_coded_words": fem_w
             }
+
+# adding the assessing method that Brooke Loveday, the original creator of the genderdecoder algorithm, uses.
+#def assess_v2(ad_text, masc_w=wordlists.masculine_coded_words, fem_w=wordlists.feminine_coded_words):
+#    ad_text = ''.join([i if ord(i) < 128 else ' ' for i in ad_text])
+#    ad_text = re.sub("[\\s]", " ", ad_text, 0, 0)
+#    ad_text = re.sub("[\.\t\,\:;\(\)\.]", "", ad_text, 0, 0).split(" ")
+#    ad_text = [ad for ad in ad_text if ad != ""]
+#        
+#    masc_w = [adword for adword in ad_text
+#        for word in masc_w
+#        if adword.startswith(word)]
+#    
+#    fem_w = [adword for adword in ad_text
+#        for word in fem_w
+#        if adword.startswith(word)]
+#    
+#    fem_w_count = len(fem_w)
+#    masc_w_count = len(masc_w)
+#    coding_score = fem_w_count - masc_w_count
+#    if coding_score == 0:
+#        if fem_w_count:
+#            result = "neutral"
+#        else:
+#            result = "empty"
+#            
+#    elif coding_score > 3:
+#        result = "strongly feminine-coded"
+#    elif coding_score > 0:
+#        result = "feminine-coded"
+#    elif coding_score < -3:
+#        result = "strongly masculine-coded"
+#    else:
+#        result = "masculine-coded"
+#  
+
+#    return {"result": result,
+#            "masculine_coded_words": masc_w,
+#            "feminine_coded_words": fem_w
+#            }
 
 # male_list and female_list that contain asterisk words should be passed as arguments.
 def assess_v3(ad_text, masc_w=wordlists.masculine_coded_words, fem_w=wordlists.feminine_coded_words):
